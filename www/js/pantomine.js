@@ -1,6 +1,6 @@
-// requier cordova.js
+// require cordova.js
 // require jquery.js
-// require jquery.mobile.js
+// require jquery-ui.js
 
 pantomine = {
 
@@ -28,24 +28,72 @@ pantomine = {
 	pantomine.canvas = document.getElementById(pantomine.CANVAS_ID);
 	pantomine.context = pantomine.canvas.getContext('2d');
 
-	$('#'+pantomine.BUTTON_ID).click(pantomine.capturePhoto);
+	$('#getpic').click(pantomine.getPhoto);
 	$('#'+pantomine.CANVAS_ID).click(pantomine.getColor);
+	$('#cell').click(function () {
+		pantomine.capturePhoto();
+		$('#overlay').css('display', 'none');
+		$('#container').css('display', 'block');
+	    });
+	$('#tooltip').click(function () {
+		$('#tooltip').css('display', 'none');
+	    });
+	$('#tab').click(function () {
+		var $lefty = $($('#swatches')[0]);
+		$lefty.animate({
+			left: parseInt($lefty.css('left'),10) == 0 ?
+			    -$lefty.outerWidth() :       
+			0 
+			    });  
+	    });
+		
     },
 
-    getColor: function (evt) {
-	var offset, x, y, image_data, pixel;
+    getHex: function (r, g, b) {
+	var hex;
 
-	offset = $(pantomine.canvas).offset();
+	hex = ((r << 16) + (g << 8) + b).toString(16);
+	if (hex.length == 4) {
+	    hex = '#00' + hex;
+	} else if (hex.length == 5) {
+	    hex = '#0' + hex;
+	} else {
+	    hex = '#' + hex;
+	}
+
+	return hex;
+    },
+
+    getContrastHex: function (r, g, b) {
+	if (r < 127 && g < 127 && b < 127) {
+	    return '#ffffff';
+	}
+	return '#000000';
+    },
+
+
+    /* Get color from canvas */
+    getColor: function (evt) {
+	var offset, x, y, image_data, pixel, r, g, b, hex;
+
+	offset = $('#image').offset();
 	x = Math.floor(evt.pageX - offset.left);
 	y = Math.floor(evt.pageY - offset.top);
 
 	image_data = pantomine.context.getImageData(x, y, 1, 1);
 	pixel = image_data.data;
 
-	$('#rgb').val(pixel[0]+','+pixel[1]+','+pixel[2]);
-	pantomine.getPantone(pixel[0], pixel[1], pixel[2]);
+	r = parseInt(pixel[0]);
+	g = parseInt(pixel[1]);
+	b = parseInt(pixel[2]);
+
+	hex = pantomine.getHex(r, g, b);   
+	$('#tooltip').text(''+r+','+g+','+b).css('display', 'block').css('background-color', hex).css('color', pantomine.getContrastHex(r, g, b));
+	pantomine.placeTooltip(x, y);
+	pantomine.getPantone(r, g, b);
     },
 
+    /* Set the image on the canvas */
     setCanvas: function (image_source) {
 	var image = new Image();
 	image.src = image_source;
@@ -97,14 +145,20 @@ pantomine = {
 	        dataType: 'jsonp',
 		jsonp: 'callback',
 	    }).done(function (data, textStatus, jqXHR) {
-		    var name;
-		    for (name in data) {
-			$('#pantone').val(name);
-			break;
-		    }
+		    var swatches, colors, i;
+
+		    colors = Object.keys(data);
+		    swatches = $('.swatch');		    
+		    $.each(swatches, function (i) {
+			    $(swatches[i]).css('background-color', data[colors[i]]).text(colors[i]);
+			});
 		}).fail(function (jqXHR, textStatus, error) {
 			alert(textStatus + '; ' + error);
 		    });
+    },
+
+    placeTooltip: function (x, y) {
+	$('#tooltip').css('top', (y > 100) ? y - 100 : y).css('left', (x > 100) ? x - 100 : x);
     }
 };
 

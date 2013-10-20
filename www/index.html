@@ -5,18 +5,36 @@
 	<meta charset="utf-8">
 	<title>Pantomine</title>
 
-	<link type="text/css" rel="stylesheet" href="css/pantomine.css" />
+	<link type="text/css" rel="stylesheet" href="css/index.css" />
 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
 </head>
 
 <body>
-	<div class="container">
-		<canvas id="image" width="500" height="333"></canvas>
-		<button id="getpic">Get Picture</button>
-		<input type="text" id="rgb" />
-	  <input type="text" id="pantone" />
+
+	<div id="overlay">
+		<div id="wrapper">
+			<div id="cell">
+				<img id="getpic" src="img/Camera.jpg" width="150px" height="150px" />
+			</div>
+	  </div>
 	</div>
+
+	<div id="container">
+		<canvas id="image"></canvas>
+	</div>
+
+	<div id="swatches">
+	  <div id="tab">&nbsp;</div>
+		<div class="swatch"></div>
+		<div class="swatch"></div>
+		<div class="swatch"></div>
+		<div class="swatch"></div>
+		<div class="swatch"></div>
+		<div class="swatch"></div>
+	</div>
+
+	<div id="tooltip"></div>
 
 	<script type="text/javascript" charset="utf-8" src="js/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/pantomine.js"></script>
