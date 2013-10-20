@@ -4,13 +4,14 @@
 
 pantomine = {
 
-    CANVAS_ID: 'image',
-    BUTTON_ID: 'getpic',
-    
     picture_source: null,
     destination_type: null,
     canvas: null,
     context: null,
+
+    selected_swatch: null,
+
+    picture_uris: [],
 
     onReady: function () {
 	if ($.mobile) {
@@ -25,16 +26,18 @@ pantomine = {
 	    pantomine.setCanvas('img/sky.jpg');
 	}
 
-	pantomine.canvas = document.getElementById(pantomine.CANVAS_ID);
+	pantomine.canvas = document.getElementById('image');
 	pantomine.context = pantomine.canvas.getContext('2d');
 
-	$('#getpic').click(pantomine.getPhoto);
-	$('#'+pantomine.CANVAS_ID).click(pantomine.getColor);
+	$('.getpic').click(pantomine.capturePhoto);
+
+	$('#image').click(pantomine.getColor);
+
 	$('#cell').click(function () {
-		pantomine.capturePhoto();
 		$('#overlay').css('display', 'none');
-		$('#container').css('display', 'block');
+		$('.under').css('display', 'block');
 	    });
+
 	$('#tooltip').click(function () {
 		$('#tooltip').css('display', 'none');
 	    });
@@ -45,9 +48,17 @@ pantomine = {
 			    -$lefty.outerWidth() :       
 			0 
 			    });  
+	    });		
+	$('.swatch').click(function (evt) {
+		var swatches = $('.swatch');
+		$.each(swatches, function (i) {
+			$(swatches[i]).css('border', 'none');
+		    });
+		$(evt.target).css('border', '1px black solid');
 	    });
-		
     },
+
+    
 
     getHex: function (r, g, b) {
 	var hex;
@@ -93,8 +104,22 @@ pantomine = {
 	pantomine.getPantone(r, g, b);
     },
 
+    reset: function () {
+	var swatches;
+
+	swatches = $('.swatch');
+	$.each(swatches, function (i) {
+		$(swatches[i]).css('border', 'none').css('background-color', 'white');
+	    });
+	$('#swatches').css('left', '-100px');
+	$('#tooltip').css('display', 'none');
+    },
     /* Set the image on the canvas */
     setCanvas: function (image_source) {
+	pantomine.reset();
+
+	pantomine.picture_uris.push(image_source);	
+
 	var image = new Image();
 	image.src = image_source;
 	image.onload = function () {
@@ -117,6 +142,8 @@ pantomine = {
     },
 
     capturePhoto: function () {
+	if (navigator == undefined || navigator.camera == undefined) return;
+
 	navigator.camera.getPicture(pantomine.updateImageData, pantomine.showError, {
 		quality: 50,
 		destinationType: navigator.camera.DestinationType.DATA_URL });

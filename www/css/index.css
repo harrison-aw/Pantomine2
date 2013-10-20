@@ -9,7 +9,10 @@
     margin: auto;
     background-color: rgba(1.0, 1.0, 1.0, 1.0);
     z-index: 100;
+}
 
+.under {
+    display: none;
 }
 
 #wrapper {
@@ -22,7 +25,6 @@
 }
 
 #container {
-    display: none;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -63,6 +65,7 @@
     left: 100px;
     z-index: 55;
     background-image: url(../img/pullTab.png);
+    cursor: pointer;
 }
 
 .swatch {
@@ -72,7 +75,6 @@
     margin-top: 20px;
     margin-left: 10px;
     z-index: 60;
-    cursor: pointer;
 }
 
 #tooltip {
@@ -88,4 +90,13 @@
     box-shadow: 1px 1px 1px black;
     -moz-border-radius: 15px;
     border-radius: 15px;
+}
+
+#camera {
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+    z-index: 10;
+    width: 50px;
+    height: 51px;
 }

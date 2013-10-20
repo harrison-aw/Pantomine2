@@ -14,17 +14,17 @@
 
 	<div id="overlay">
 		<div id="wrapper">
-			<div id="cell">
-				<img id="getpic" src="img/Camera.jpg" width="150px" height="150px" />
+			<div id="cell" class="getpic">
+				<img src="img/Camera.jpg" width="150px" height="150px" />
 			</div>
 	  </div>
 	</div>
 
-	<div id="container">
+	<div id="container" class="under">
 		<canvas id="image"></canvas>
 	</div>
 
-	<div id="swatches">
+	<div id="swatches" class="under">
 	  <div id="tab">&nbsp;</div>
 		<div class="swatch"></div>
 		<div class="swatch"></div>
@@ -35,6 +35,8 @@
 	</div>
 
 	<div id="tooltip"></div>
+
+	<div id="camera" class="getpic under"><img width="50" height="51" src="img/Camera_icon.gif" /></div>
 
 	<script type="text/javascript" charset="utf-8" src="js/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/pantomine.js"></script>
